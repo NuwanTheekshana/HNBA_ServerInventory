@@ -22,7 +22,7 @@
       var vir_ipadd = $('#vir_ipadd').val();
       var vir_os = $('#vir_os').val();
       var vir_name = $('#vir_name').val();
-      var vir_pyapplication = $('#vir_pyapplication').val();
+      var vir_application = $('#vir_application').val();
 
       // var apps = $('input[name^=apps]');
       // var apps = apps.map(function(idx, elem) {
@@ -35,12 +35,13 @@
         apps.push($(this).val());
       });
       var apps= apps.join('|');
-
-      var vir_application = $('input[name^=vir_application]');
-      var vir_application = vir_application.map(function(idx, elem) {
+      
+      var vir_pyapplication = $('input[name^=vir_pyapplication]');
+      var vir_pyapplication = vir_pyapplication.map(function(idx, elem) {
         return $(elem).val();
       }).get();
-      var vir_application= vir_application.join('|');
+      // var vir_application= vir_application.join('|');
+
 
       var vir_pyname = $("input[id='vir_pyname']").map(function(){return $(this).val();}).get();
       var vir_pyipadd = $("input[id='vir_pyipadd']").map(function(){return $(this).val();}).get();
@@ -60,6 +61,7 @@
         vir_name = "";
       }
 
+       
      
       $.ajax({
         headers: {

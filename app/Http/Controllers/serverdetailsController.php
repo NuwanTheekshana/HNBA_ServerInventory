@@ -51,129 +51,129 @@ class serverdetailsController extends Controller
             $apps = "";
         }
 
-        // if ($py_or_vir == "Physical") 
-        // {
-        //     if ($serv_option_in == "Yes") 
-        //     {
-        //         $vir_serve_token = rand(10,100000);
-        //         $vir_pyname = $request->vir_pyname;
-        //         $vir_pyipadd = $request->vir_pyipadd;
-        //         $vir_pyos = $request->vir_pyos;
-        //         $vir_application_py = $request->vir_application_py;
+        if ($py_or_vir == "Physical") 
+        {
+            if ($serv_option_in == "Yes") 
+            {
+                $vir_serve_token = rand(10,100000);
+                $vir_pyname = $request->vir_pyname;
+                $vir_pyipadd = $request->vir_pyipadd;
+                $vir_pyos = $request->vir_pyos;
+                $vir_application_py = $request->vir_application_py;
 
-        //         $add_data = new serverdetails();
-        //         $add_data->Physial_or_Virtual = $py_or_vir;
-        //         $add_data->availble_vm = $serv_option_in;
-        //         $add_data->virtual_serv_token = $vir_serve_token;
-        //         $add_data->Serial_No = $seri_no;
-        //         $add_data->Asset_No = $asset_no;
-        //         $add_data->Purchase_year = $pur_year;
-        //         $add_data->Rack_No = $rack_no;
-        //         $add_data->Rack_unit_No = $rack_u_no;
-        //         $add_data->product_and_modal = $pro_model;
+                $add_data = new serverdetails();
+                $add_data->Physial_or_Virtual = $py_or_vir;
+                $add_data->availble_vm = $serv_option_in;
+                $add_data->virtual_serv_token = $vir_serve_token;
+                $add_data->Serial_No = $seri_no;
+                $add_data->Asset_No = $asset_no;
+                $add_data->Purchase_year = $pur_year;
+                $add_data->Rack_No = $rack_no;
+                $add_data->Rack_unit_No = $rack_u_no;
+                $add_data->product_and_modal = $pro_model;
                 
-        //         $add_data->vir_name = "";
-        //         $add_data->ip_address = $ip_address;
-        //         $add_data->vir_ipadd = "";
-        //         $add_data->OS = $os;
-        //         $add_data->vir_os = "";
-        //         $add_data->Applications = $apps;
-        //         $add_data->vir_application = "";
-        //         $add_data->Created_user_id = $created_user_id;
-        //         $add_data->Created_by = $created_by;
-        //         $add_data->Status = 1;
+                $add_data->vir_name = "";
+                $add_data->ip_address = $ip_address;
+                $add_data->vir_ipadd = "";
+                $add_data->OS = $os;
+                $add_data->vir_os = "";
+                $add_data->Applications = $apps;
+                $add_data->vir_application = "";
+                $add_data->Created_user_id = $created_user_id;
+                $add_data->Created_by = $created_by;
+                $add_data->Status = 1;
 
 
-        //         foreach ($vir_pyname as $i => $key)
-        //         {
-        //             $data[] = array(
-        //                 'virtual_serv_token' => $vir_serve_token,
-        //                 'vir_machine_name' => $vir_pyname[$i],
-        //                 'virtual_machine_ip' => $vir_pyipadd[$i],
-        //                 'virtual_machine_os' => $vir_pyos[$i],
-        //                 'virtual_apps' => $vir_pyapplication[$i],
-        //                 'added_user_id' => $created_user_id,
-        //                 'added_user' => $created_by,
-        //                 'vir_status' => '1'
-        //             );
+                foreach ($vir_pyname as $i => $key)
+                {
+                    $data[] = array(
+                        'virtual_serv_token' => $vir_serve_token,
+                        'vir_machine_name' => $vir_pyname[$i],
+                        'virtual_machine_ip' => $vir_pyipadd[$i],
+                        'virtual_machine_os' => $vir_pyos[$i],
+                        'virtual_apps' => $vir_pyapplication[$i],
+                        'added_user_id' => $created_user_id,
+                        'added_user' => $created_by,
+                        'vir_status' => '1'
+                    );
 
-        //             $data2[] = array(
-        //                 'vm_server_token' => $vir_serve_token,
-        //                 'vm_server_name' => $vir_pyname[$i],
-        //                 'vm_server_update_user_id' => $created_user_id,
-        //                 'vm_server_update_user' => $created_by,
-        //                 'vm_server_status' => 'Create'
-        //             );
+                    $data2[] = array(
+                        'vm_server_token' => $vir_serve_token,
+                        'vm_server_name' => $vir_pyname[$i],
+                        'vm_server_update_user_id' => $created_user_id,
+                        'vm_server_update_user' => $created_by,
+                        'vm_server_status' => 'Create'
+                    );
 
-        //         }
+                }
                 
-        //         py_vir_server_table::insert($data);
-        //         py_vir_serve_followup::insert($data2);
+                py_vir_server_table::insert($data);
+                py_vir_serve_followup::insert($data2);
                 
-        //         $add_data->save();
+                $add_data->save();
                 
-        //     }
-        //     else
-        //     {
-        //         $add_data = new serverdetails();
-        //         $add_data->Physial_or_Virtual = $py_or_vir;
-        //         $add_data->availble_vm = $serv_option_in;
-        //         $add_data->virtual_serv_token = "";
-        //         $add_data->Serial_No = $seri_no;
-        //         $add_data->Asset_No = $asset_no;
-        //         $add_data->Purchase_year = $pur_year;
-        //         $add_data->Rack_No = $rack_no;
-        //         $add_data->Rack_unit_No = $rack_u_no;
-        //         $add_data->product_and_modal = $pro_model;
-        //         $add_data->vir_name = "";
-        //         $add_data->ip_address = $ip_address;
-        //         $add_data->vir_ipadd = "";
-        //         $add_data->OS = $os;
-        //         $add_data->vir_os = "";
-        //         $add_data->Applications = $apps;
-        //         $add_data->vir_application = "";
-        //         $add_data->Created_user_id = $created_user_id;
-        //         $add_data->Created_by = $created_by;
-        //         $add_data->Status = 1;
-        //         $add_data->save();
-        //     }
-        // }
-        // else if($py_or_vir == "Virtual")
-        // {
-        //         $add_data = new serverdetails();
-        //         $add_data->Physial_or_Virtual = $py_or_vir;
-        //         $add_data->availble_vm = "No";
-        //         $add_data->virtual_serv_token = "";
-        //         $add_data->Serial_No = "";
-        //         $add_data->Asset_No = "";
-        //         $add_data->Purchase_year = $date;
-        //         $add_data->Rack_No = "";
-        //         $add_data->Rack_unit_No = "";
-        //         $add_data->product_and_modal = "";
-        //         $add_data->vir_name = $vir_name;
-        //         $add_data->ip_address = "";
-        //         $add_data->vir_ipadd = $vir_ipadd;
-        //         $add_data->OS = "";
-        //         $add_data->vir_os = $vir_os;
-        //         $add_data->Applications = "";
-        //         $add_data->vir_application = $vir_application;
-        //         $add_data->Created_user_id = $created_user_id;
-        //         $add_data->Created_by = $created_by;
-        //         $add_data->Status = 1;
-        //         $add_data->save();
-        // }
+            }
+            else
+            {
+                $add_data = new serverdetails();
+                $add_data->Physial_or_Virtual = $py_or_vir;
+                $add_data->availble_vm = $serv_option_in;
+                $add_data->virtual_serv_token = "";
+                $add_data->Serial_No = $seri_no;
+                $add_data->Asset_No = $asset_no;
+                $add_data->Purchase_year = $pur_year;
+                $add_data->Rack_No = $rack_no;
+                $add_data->Rack_unit_No = $rack_u_no;
+                $add_data->product_and_modal = $pro_model;
+                $add_data->vir_name = "";
+                $add_data->ip_address = $ip_address;
+                $add_data->vir_ipadd = "";
+                $add_data->OS = $os;
+                $add_data->vir_os = "";
+                $add_data->Applications = $apps;
+                $add_data->vir_application = "";
+                $add_data->Created_user_id = $created_user_id;
+                $add_data->Created_by = $created_by;
+                $add_data->Status = 1;
+                $add_data->save();
+            }
+        }
+        else if($py_or_vir == "Virtual")
+        {
+                $add_data = new serverdetails();
+                $add_data->Physial_or_Virtual = $py_or_vir;
+                $add_data->availble_vm = "No";
+                $add_data->virtual_serv_token = "";
+                $add_data->Serial_No = "";
+                $add_data->Asset_No = "";
+                $add_data->Purchase_year = $date;
+                $add_data->Rack_No = "";
+                $add_data->Rack_unit_No = "";
+                $add_data->product_and_modal = "";
+                $add_data->vir_name = $vir_name;
+                $add_data->ip_address = "";
+                $add_data->vir_ipadd = $vir_ipadd;
+                $add_data->OS = "";
+                $add_data->vir_os = $vir_os;
+                $add_data->Applications = "";
+                $add_data->vir_application = $vir_application;
+                $add_data->Created_user_id = $created_user_id;
+                $add_data->Created_by = $created_by;
+                $add_data->Status = 1;
+                $add_data->save();
+        }
 
-        // $add_data = new followup();
-        // $add_data->server_type = $py_or_vir;
-        // $add_data->Serial_no = $seri_no;
-        // $add_data->Asset_no = $asset_no;
-        // $add_data->Rack_no = $rack_no;
-        // $add_data->Rack_unit_No = $rack_u_no;
-        // $add_data->product_and_modal = $pro_model;
-        // $add_data->status = "Create";
-        // $add_data->update_user_id = $created_user_id;
-        // $add_data->update_user_name = $created_by;
-        // $add_data->save();
+        $add_data = new followup();
+        $add_data->server_type = $py_or_vir;
+        $add_data->Serial_no = $seri_no;
+        $add_data->Asset_no = $asset_no;
+        $add_data->Rack_no = $rack_no;
+        $add_data->Rack_unit_No = $rack_u_no;
+        $add_data->product_and_modal = $pro_model;
+        $add_data->status = "Create";
+        $add_data->update_user_id = $created_user_id;
+        $add_data->update_user_name = $created_by;
+        $add_data->save();
 
         return response()->json(['success'=>'Server Details added succesfully..!', 'vir_pyname' => $vir_pyname]);
     }
