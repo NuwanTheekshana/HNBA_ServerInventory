@@ -24,10 +24,16 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::POST('/add_server_details', 'serverdetailsController@add_server_details')->name('add_server_details');
 Route::get('/find_server_details', 'serverdetailsController@find_server_details')->name('find_server_details');
 Route::get('/view_server_details', 'serverdetailsController@view_server_details')->name('view_server_details');
+Route::get('/view_vir_server_details', 'serverdetailsController@view_vir_server_details')->name('view_vir_server_details');
 Route::get('/update_server_details', 'serverdetailsController@update_server_details')->name('update_server_details');
 Route::get('/remove_server_details', 'serverdetailsController@remove_server_details')->name('remove_server_details');
 Route::get('/vir_data_insert', 'serverdetailsController@vir_data_insert')->name('vir_data_insert');
 Route::get('/vir_data_delete', 'serverdetailsController@vir_data_delete')->name('vir_data_delete');
+Route::get('/main_vir_data_delete', 'serverdetailsController@main_vir_data_delete')->name('main_vir_data_delete');
+
+// Export to excel
+Route::get('/report','serverdetailsController@report')->name('report');
+Route::get('/vir_report','serverdetailsController@vir_report')->name('vir_report');
 
 
 

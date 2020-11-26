@@ -95,6 +95,18 @@
       var ser_no = $('#ser_no').val();
       var asstno = $('#asstno').val();
       var ip = $('#ip').val();
+      var assttype = $('#assttype').val();
+
+      if (assttype == "" || assttype == null) 
+      {
+        $.bootstrapGrowl('<span class = "fas fa-info-circle"></span>&nbsp;&nbsp;&nbsp;Warning&nbsp;!&nbsp;Asset type is required..!',
+              {
+                type: 'danger',
+                width: 500,
+                delay: 5000,  
+              });
+        return false;
+      }
 
       $.ajax({
         headers: {
@@ -102,10 +114,82 @@
         },
            type:'GET',
            url:'{{url("/find_server_details")}}',
-           data:{ser_no:ser_no,asstno:asstno,ip:ip},
+           data:{ser_no:ser_no,asstno:asstno,ip:ip,assttype:assttype},
            success:function(jsonData){
              var premission = jsonData.premission;
-            $("#find_server_details").dataTable().fnDestroy();
+
+           
+
+            if (assttype == "Virtual") 
+            {
+              
+              $('#find_vir_server_div').show(1000);
+              $('#find_server_details_div').hide(1000);
+
+
+              $("#find_vir_server_details").dataTable().fnDestroy();
+            if (premission == "1")
+            {
+            var myDataTable =  $('#find_vir_server_details').DataTable({
+                data  :  jsonData.vir_query,
+                columns : 
+                [
+                { data : "vir_machine_name" },
+                { data : "virtual_machine_os" },
+                { data : "virtual_machine_ip" },
+                { data : "virtual_serv_token" , render : function (data, type, row, meta, rowData) 
+                {
+                        return "<center><button onclick=editvir('"+row.virtual_serv_token+"'); class='btn btn-warning btn-sm btn_style' style='background-color:orange;'><i class='fa fa-edit'></i></button>  <button onclick=viewvir('"+row.virtual_serv_token+"'); class='btn btn-success btn-sm btn_style' style='background-color:green;'><i class='fa fa-server'></i></button> <button onclick=removevir('"+row.id+"'); class='btn btn-danger btn-sm btn_style' style='background-color:red;'><i class='fa fa-trash'></i></button> </center>"
+                }},
+
+                ],
+           
+    });
+
+      }
+      else
+      {
+
+         var myDataTable =  $('#find_vir_server_details').DataTable({
+                data  :  jsonData.vir_query,
+                columns : 
+                [
+                { data : "vir_machine_name" },
+                { data : "virtual_machine_os" },
+                { data : "virtual_machine_ip" },
+                { data : "virtual_serv_token" , render : function (data, type, row, meta, rowData) 
+                {
+                        return "<center> <button onclick=viewvir('"+row.virtual_serv_token+"'); class='btn btn-success btn-sm btn_style' style='background-color:green;'><i class='fa fa-server'></i>&nbsp; View</button>  </center>"
+                }},
+
+                ],
+           
+          });
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            }
+
+
+            else
+            {
+              $('#find_server_details_div').show(1000);
+              $('#find_vir_server_div').hide(1000);
+
+              $("#find_server_details").dataTable().fnDestroy();
             if (premission == "1")
             {
             var myDataTable =  $('#find_server_details').DataTable({
@@ -130,6 +214,7 @@
       }
       else
       {
+
          var myDataTable =  $('#find_server_details').DataTable({
                 data  :  jsonData.data,
                 columns : 
@@ -147,8 +232,22 @@
 
                 ],
            
-    });
-      }
+          });
+        }
+
+
+
+            }
+
+
+
+
+
+
+
+
+
+
       
               
            }
@@ -446,6 +545,37 @@
             $('#phy_ipadd').show(1000);
             $('#phy_os').show(1000);  
             $('#phy_pur_year').show(1000);  
+        }
+        else if (x == "NAS") 
+        {
+            $('#virual_list').hide(1000);
+            $('#phy_modal').show(1000);
+            $('#phy_rack_u_no').show(1000);
+            $('#phy_rack_no').show(1000);
+            $('#phy_seri_no').show(1000);
+            $('#phy_asset_no').show(1000);
+            $('#phy_ipadd').show(1000);
+            $('#phy_os').hide(1000);
+            $('#phy_app').hide(1000);
+            $('#phy_pur_year').show(1000);
+            $('#server_option').hide(1000);
+            $('#vir_server_data').hide(1000);
+        }
+
+        else if (x == "Switch" || x == "Router") 
+        {
+            $('#virual_list').hide(1000);
+            $('#phy_modal').show(1000);
+            $('#phy_rack_u_no').show(1000);
+            $('#phy_rack_no').show(1000);
+            $('#phy_seri_no').show(1000);
+            $('#phy_asset_no').show(1000);
+            $('#phy_ipadd').hide(1000);
+            $('#phy_os').hide(1000);
+            $('#phy_app').hide(1000);
+            $('#phy_pur_year').show(1000);
+            $('#server_option').hide(1000);
+            $('#vir_server_data').hide(1000);
         }
         
 
@@ -918,4 +1048,213 @@
  });
 
 
+</script>
+
+
+
+
+
+<script>
+    function editvir(token)
+    {
+      $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+           type:'GET',
+           url:'{{url("/view_vir_server_details")}}',
+           data:{token:token},
+           success:function(jsonData){
+
+            $('#update_id').val(jsonData.viewdata.id);
+            $('#update_py_or_vir').val(jsonData.viewdata.Physial_or_Virtual);
+            $('#update_seri_no').val(jsonData.viewdata.Serial_No);
+            $('#update_asset_no').val(jsonData.viewdata.Asset_No);
+            $('#update_pur_year').val(jsonData.viewdata.Purchase_year);
+            $('#update_rack_no').val(jsonData.viewdata.Rack_No);
+            $('#update_rack_u_no').val(jsonData.viewdata.Rack_unit_No);
+            $('#update_pro_model').val(jsonData.viewdata.product_and_modal);
+            $('#update_ip_address').val(jsonData.viewdata.ip_address);
+            $('#update_os').val(jsonData.viewdata.OS);
+            $('#update_apps').val(jsonData.viewdata.Applications);
+
+            if (jsonData.viewdata.Physial_or_Virtual == "Virtual") 
+            {
+              $('#update_vir_name').val(jsonData.viewdata.vir_name);
+              $('#update_vir_ipadd').val(jsonData.viewdata.vir_ipadd);
+              $('#update_vir_os').val(jsonData.viewdata.vir_os);
+              var vir_application = jsonData.viewdata.vir_application;
+              var array = vir_application.split('|');
+              var textarea = document.getElementById("curr_app");
+              textarea.value = array.join("\n");
+                $('#update_virual_to_list').show();
+                $('#update_py_view').hide();
+                $('#nav-tab').hide();
+
+            } 
+            else 
+            {
+                $('#update_virual_to_list').hide();
+                $('#update_py_view').show();
+                $('#nav-tab').show();
+                $('#vir_torken').val(jsonData.viewdata.virtual_serv_token);
+                $('#availble_vm').val(jsonData.viewdata.availble_vm);
+                $('#py_id').val(jsonData.viewdata.id);
+                console.log(jsonData.vir_server_data);
+                var table = $('#vm_data_table').DataTable();
+                table.destroy();
+
+                var myDataTable =  $('#vm_data_table').DataTable({
+                data  :  jsonData.vir_server_data,
+                columns : 
+                [
+                { data : "vir_machine_name" },
+                { data : "virtual_machine_ip" },
+                { data : "virtual_machine_os" },
+                { data : "virtual_apps" },
+                { data : "id" , render : function (data, type, row, meta, rowData) 
+                {
+                        return "<center> <button onclick=vir_remove('"+row.id+"'); class='btn btn-danger btn-sm btn_style' style='background-color:red;'><i class='fa fa-trash'></i></button>  </center>"
+                }},
+
+                ],
+           
+            });
+
+            }
+
+            $('#update_modal').modal('show');
+        
+           }
+
+        });
+    }
+   
+</script>
+
+
+<script>
+  function viewvir(token) 
+  {
+    $.ajax({
+      headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+         type:'GET',
+         url:'{{url("/view_vir_server_details")}}',
+         data:{token:token},
+         success:function(jsonData){
+
+          $('#view_id').val(jsonData.viewdata.id);
+          $('#view_py_or_vir').val(jsonData.viewdata.Physial_or_Virtual);
+          $('#view_seri_no').val(jsonData.viewdata.Serial_No);
+          $('#view_asset_no').val(jsonData.viewdata.Asset_No);
+          $('#view_pur_year').val(jsonData.viewdata.Purchase_year);
+          $('#view_rack_no').val(jsonData.viewdata.Rack_No);
+          $('#view_rack_u_no').val(jsonData.viewdata.Rack_unit_No);
+          $('#view_pro_model').val(jsonData.viewdata.product_and_modal);
+          $('#view_ip_address').val(jsonData.viewdata.ip_address);
+          $('#view_os').val(jsonData.viewdata.OS);
+          $('#view_apps').val(jsonData.viewdata.Applications);
+          $('#view_create').val(jsonData.viewdata.Created_by);
+          $('#view_modal').modal('show');
+
+          console.log(jsonData.vir_server_data);
+              var table = $('#view_vm_data_table').DataTable();
+              table.destroy();
+            var myDataTable =  $('#view_vm_data_table').DataTable({
+              data  :  jsonData.vir_server_data,
+              columns : 
+              [
+              { data : "vir_machine_name" },
+              { data : "virtual_machine_ip" },
+              { data : "virtual_machine_os" },
+              { data : "virtual_apps" },
+              
+              ],
+         
+          });
+
+      
+         }
+
+      });
+  }
+</script>
+
+
+<script>
+  function removevir(id) 
+  {
+    if (confirm('Are you sure you want to remove this record?')) 
+        {
+        } 
+        else 
+        {
+           return false;
+        }
+
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+           type:'GET',
+           url:'{{url("/main_vir_data_delete")}}',
+           data:{id:id},
+           success:function(jsonData){
+             console.log(jsonData.data);
+            $.bootstrapGrowl('<span class = "fas fa-info-circle"></span>&nbsp;&nbsp;&nbsp;Success&nbsp;!&nbsp;'+jsonData.success,
+              {
+                type: 'success',
+                width: 500,
+                delay: 5000,  
+              });
+                console.log(jsonData.vir_server_data);
+                var table = $('#vm_data_table').DataTable();
+                table.destroy();
+              var myDataTable =  $('#vm_data_table').DataTable({
+                data  :  jsonData.vir_server_data,
+                columns : 
+                [
+                { data : "vir_machine_name" },
+                { data : "virtual_machine_ip" },
+                { data : "virtual_machine_os" },
+                { data : "virtual_apps" },
+                { data : "id" , render : function (data, type, row, meta, rowData) 
+                {
+                        return "<center> <button onclick=vir_remove('"+row.id+"'); class='btn btn-danger btn-sm btn_style' style='background-color:red;'><i class='fa fa-trash'></i></button>  </center>"
+                }},
+
+                ],
+           
+            });
+
+           } 
+
+        });
+ 
+  }
+</script>
+
+<script>
+  $('#assttype').change(function () 
+  {
+      var assttype = $('#assttype').val();
+
+      if (assttype == "Virtual") 
+      {
+          $('#ser_no').prop('disabled', true);
+          $('#asstno').prop('disabled', true);
+      }
+      else if (assttype == "Switch" || assttype == "Router") 
+      {
+          $('#ip').prop('disabled', true);
+      }
+      else
+      {
+          $('#ser_no').prop('disabled', false);
+          $('#asstno').prop('disabled', false);
+          $('#ip').prop('disabled', false);
+      }
+  });
 </script>

@@ -30,7 +30,24 @@
                                   
                                 </div>
                             </li>
-                    </ul>
+                   
+
+
+                        <li class="nav-item dropdown">
+                                <a id="users" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                    <i class="fa fa-file"></i>&nbsp; Report
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="users">
+                                    <a class="dropdown-item" href="{{ route('report') }}">
+                                        {{ __('All Servers & other') }}
+                                    </a>
+                                    <a class="dropdown-item" href="{{ route('vir_report') }}">
+                                        {{ __('Virtual Server') }}
+                                    </a>
+                                  
+                                </div>
+                            </li>
+                        </ul>
 
                     @else
                         

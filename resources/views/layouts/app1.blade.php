@@ -68,6 +68,10 @@ $(document).ready(function() {
 $(document).ready(function() {
     $('#view_vm_data_table').DataTable();
 } );
+$(document).ready(function() {
+    $('#find_vir_server_details').DataTable();
+} );
+
 
 </script>
 

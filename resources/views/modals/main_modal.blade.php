@@ -17,9 +17,12 @@
             <label for="py_or_vir" class="col-sm-4 col-form-label">Server Type *</label>
           <div class="col-sm-8">
             <select class="form-control" name="py_or_vir" id="py_or_vir">
-              <option value="">Select Server Type</option>
-              <option value="Physical">Physical</option>
-              <option value="Virtual">Virtual</option>
+              <option value="">Select Asset Type</option>
+              <option value="Physical">Physical Server</option>
+              <option value="Virtual">Virtual Server</option>
+              <option value="NAS">NAS</option>
+              <option value="Switch">Network Switch</option>
+              <option value="Router">Network Router</option>
             </select>
           </div>
       </div>

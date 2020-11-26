@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ListExport;
+use App\Exports\ListExport2;
 use App\serverdetails;
 use App\py_vir_server_table;
 use App\followup;
@@ -49,6 +52,17 @@ class serverdetailsController extends Controller
             $ip_address = "";
             $os = "";
             $apps = "";
+        }
+
+        if ($py_or_vir == "NAS") {
+            $os = "";
+            $apps = "";
+        }
+
+        if ($py_or_vir == "Switch" || $py_or_vir == "Router") {
+            $os = "";
+            $apps = "";
+            $ip_address = "";
         }
 
         if ($py_or_vir == "Physical") 
@@ -162,6 +176,30 @@ class serverdetailsController extends Controller
                 $add_data->Status = 1;
                 $add_data->save();
         }
+        else
+        {
+                $add_data = new serverdetails();
+                $add_data->Physial_or_Virtual = $py_or_vir;
+                $add_data->availble_vm = "No";
+                $add_data->virtual_serv_token = "";
+                $add_data->Serial_No = $seri_no;
+                $add_data->Asset_No = $asset_no;
+                $add_data->Purchase_year = $date;
+                $add_data->Rack_No = $rack_no;
+                $add_data->Rack_unit_No = $rack_u_no;
+                $add_data->product_and_modal = $pro_model;
+                $add_data->vir_name = "";
+                $add_data->ip_address = $ip_address;
+                $add_data->vir_ipadd = "";
+                $add_data->OS = $os;
+                $add_data->vir_os = "";
+                $add_data->Applications = $apps;
+                $add_data->vir_application = "";
+                $add_data->Created_user_id = $created_user_id;
+                $add_data->Created_by = $created_by;
+                $add_data->Status = 1;
+                $add_data->save();
+        }
 
         $add_data = new followup();
         $add_data->server_type = $py_or_vir;
@@ -183,23 +221,47 @@ class serverdetailsController extends Controller
         $ser_no = $request->ser_no;
         $asstno = $request->asstno;
         $ip = $request->ip;
+        $assttype = $request->assttype;
 
-        $query = DB::table('serverdetails')->where('Status', '1');
-        if ($ser_no != null)
+        if ($assttype == "Virtual") 
         {
-        $query->where('Serial_No', $ser_no);
+            $vir_query = DB::table('py_vir_server_tables')->where('vir_status', '1');
+            if ($ip != null)
+            {
+                $vir_query->where('virtual_machine_ip', $ip);
+            }
+
+            $vir_data = $vir_query->orderBy('id','desc')->get();
+
+            $premission = Auth::user()->premission;
+            return response()->json(['success'=>'Server Details find succesfully..!', 'premission' => $premission, 'vir_query' => $vir_data]);
+
+
         }
-        if ($asstno != null)
+        else
         {
-        $query->where('Asset_No', $asstno);
+            
+            $query = DB::table('serverdetails')->where('Physial_or_Virtual', $assttype)->where('Status', '1');
+            if ($ser_no != null)
+            {
+                $query->where('Serial_No', $ser_no);
+            }
+            if ($asstno != null)
+            {
+                $query->where('Asset_No', $asstno);
+            }
+            if ($ip != null)
+            {
+                $query->where('ip_address', $ip);
+            }
+                $data = $query->orderBy('id','desc')->get();
+
+                $premission = Auth::user()->premission;
+                return response()->json(['success'=>'Server Details find succesfully..!', 'data' => $data, 'premission' => $premission]);
+
         }
-        if ($ip != null)
-        {
-        $query->where('ip_address', $ip);
-        }
-        $data = $query->orderBy('id','desc')->get();
-        $premission = Auth::user()->premission;
-        return response()->json(['success'=>'Server Details find succesfully..!', 'data' => $data, 'premission' => $premission]);
+
+        
     }
 
     public function view_server_details(Request $request)
@@ -213,6 +275,21 @@ class serverdetailsController extends Controller
 
         return response()->json(['viewdata' => $viewdata,'vir_server_data' => $vir_server_token]);
     }
+
+
+    public function view_vir_server_details(Request $request)
+    {
+        $token = $request->token;
+        $id = serverdetails::where('virtual_serv_token',$token)->value('id');
+        $viewdata = serverdetails::find($id);
+
+        $vir_server_token = $viewdata->virtual_serv_token;
+        $vir_server_token = py_vir_server_table::where('virtual_serv_token', $vir_server_token)->where('vir_status', '1')->get();
+
+
+        return response()->json(['viewdata' => $viewdata,'vir_server_data' => $vir_server_token]);
+    }
+
 
 
     public function update_server_details(Request $request)
@@ -388,5 +465,42 @@ class serverdetailsController extends Controller
 
         return response()->json(['success'=>'Virtual Server Details Remove Succesfully..!', 'vir_server_data' => $vir_server_token]);
    
+    }
+
+
+    public function main_vir_data_delete(Request $request)
+    {
+        $id = $request->id;
+        $removedata = py_vir_server_table::find($id);
+        $removedata->vir_status = "0";
+        $removedata->update();
+
+        $vir_torken = $removedata->virtual_serv_token;
+        $vm_server_name = $removedata->vir_machine_name;
+        $added_by = Auth::user()->name;
+        $add_user_id = Auth::user()->id;
+
+        $vir_app_db_followup = new py_vir_serve_followup();
+        $vir_app_db_followup->vm_server_token = $vir_torken;
+        $vir_app_db_followup->vm_server_name = $vm_server_name;
+        $vir_app_db_followup->vm_server_update_user_id = $add_user_id;
+        $vir_app_db_followup->vm_server_update_user = $added_by;
+        $vir_app_db_followup->vm_server_status = "Remove";
+        $vir_app_db_followup->save();
+
+        $vir_server_token = py_vir_server_table::where('virtual_serv_token', $vir_torken)->where('vir_status', '1')->get();
+
+        return response()->json(['success'=>'Virtual Server Details Remove Succesfully..!', 'vir_server_data' => $vir_server_token]);
+   
+    }
+
+    public function report()
+    {
+        return Excel::download(new ListExport, 'server_report.xlsx');
+    }
+
+    public function vir_report()
+    {
+        return Excel::download(new ListExport2, 'vir_report.xlsx');
     }
 }
