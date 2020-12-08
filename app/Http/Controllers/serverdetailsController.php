@@ -25,8 +25,9 @@ class serverdetailsController extends Controller
         $vir_pyos = $request->vir_pyos;
         $vir_pyapplication = $request->vir_pyapplication;
 
-        $seri_no = $request->seri_no;
-        $asset_no = $request->asset_no;
+        $Serial_No = $request->Serial_No;
+        $asset_no = $request->Asset_no;
+        $serv_location = $request->serv_location;
         $pur_year = $request->pur_year;
         $rack_no = $request->rack_no;
         $rack_u_no = $request->rack_u_no;
@@ -34,7 +35,7 @@ class serverdetailsController extends Controller
         $ip_address = $request->ip_address;
         $os = $request->os;
         $apps = $request->apps;
-        $vir_ipadd = $request->vir_ipadd;
+        $virtual_machine_ip = $request->virtual_machine_ip;
         $vir_os = $request->vir_os;
         $vir_name = $request->vir_name;
         $vir_application = $request->vir_application;
@@ -42,8 +43,72 @@ class serverdetailsController extends Controller
         $created_user_id = Auth::user()->id;
         $date = date("Y-m-d");
 
+        $errors = [
+            'Asset_no.unique' => 'The Asset Number has already been taken.',
+            'Serial_No.unique' => 'The Serial Number has already been taken.',
+            
+          ];
+
+        if ($asset_no != "" || $asset_no != null) 
+        {
+            $find_asset = serverdetails::where('Asset_no', $asset_no)->count();
+
+            if ($find_asset > 0) 
+            {   
+                $this->validate($request, [
+                    'Asset_no' => 'unique:serverdetails|numeric',
+                ],$errors);
+            }
+        }
+
+        if ($Serial_No != "" || $Serial_No != null) 
+        {
+            $find_serial = serverdetails::where('Serial_No', $Serial_No)->count();
+
+            if ($find_serial > 0) 
+            {   
+                $this->validate($request, [
+                    'Serial_No' => 'unique:serverdetails',
+                ],$errors);
+            }
+        }
+
+        $ip_errors = "";
+        if ($ip_address != "" || $ip_address != null) 
+        {
+            $find_server_ipaddress= serverdetails::where('ip_address', $ip_address)->count();
+            $find_virtual_machine_ip= py_vir_server_table::where('virtual_machine_ip', $ip_address)->count();
+            $ip_total_count = $find_server_ipaddress + $find_virtual_machine_ip;
+
+            if ($ip_total_count > 0) 
+            {   
+                $ip_errors = "The IP Address has already been taken.";
+            }
+            else
+            {
+                $ip_errors = "";
+            }
+        }
+
+        if ($virtual_machine_ip != "" || $virtual_machine_ip != null) 
+        {
+            $find_server_ipaddress= serverdetails::where('ip_address', $virtual_machine_ip)->count();
+            $find_virtual_machine_ip= py_vir_server_table::where('virtual_machine_ip', $virtual_machine_ip)->count();
+            $ip_total_count = $find_server_ipaddress + $find_virtual_machine_ip;
+
+            if ($ip_total_count > 0) 
+            {   
+                $ip_errors = "The IP Address has already been taken.";
+            }
+            else
+            {
+                $ip_errors = "";
+            }
+        }
+        
+
         if ($py_or_vir == "Virtual") {
-            $seri_no = "";
+            $Serial_No = "";
             $asset_no = "";
             $pur_year = "";
             $pro_model = "";
@@ -59,7 +124,7 @@ class serverdetailsController extends Controller
             $apps = "";
         }
 
-        if ($py_or_vir == "Switch" || $py_or_vir == "Router") {
+        if ($py_or_vir == "Switch" || $py_or_vir == "Router"|| $py_or_vir == "Tape Loader"|| $py_or_vir == "KVM") {
             $os = "";
             $apps = "";
             $ip_address = "";
@@ -79,8 +144,9 @@ class serverdetailsController extends Controller
                 $add_data->Physial_or_Virtual = $py_or_vir;
                 $add_data->availble_vm = $serv_option_in;
                 $add_data->virtual_serv_token = $vir_serve_token;
-                $add_data->Serial_No = $seri_no;
+                $add_data->Serial_No = $Serial_No;
                 $add_data->Asset_No = $asset_no;
+                $add_data->serv_location = $serv_location;
                 $add_data->Purchase_year = $pur_year;
                 $add_data->Rack_No = $rack_no;
                 $add_data->Rack_unit_No = $rack_u_no;
@@ -129,12 +195,17 @@ class serverdetailsController extends Controller
             }
             else
             {
+
+
+
+
                 $add_data = new serverdetails();
                 $add_data->Physial_or_Virtual = $py_or_vir;
                 $add_data->availble_vm = $serv_option_in;
                 $add_data->virtual_serv_token = "";
-                $add_data->Serial_No = $seri_no;
+                $add_data->Serial_No = $Serial_No;
                 $add_data->Asset_No = $asset_no;
+                $add_data->serv_location = $serv_location;
                 $add_data->Purchase_year = $pur_year;
                 $add_data->Rack_No = $rack_no;
                 $add_data->Rack_unit_No = $rack_u_no;
@@ -160,6 +231,7 @@ class serverdetailsController extends Controller
                 $add_data->virtual_serv_token = "";
                 $add_data->Serial_No = "";
                 $add_data->Asset_No = "";
+                $add_data->serv_location = "";
                 $add_data->Purchase_year = $date;
                 $add_data->Rack_No = "";
                 $add_data->Rack_unit_No = "";
@@ -182,8 +254,9 @@ class serverdetailsController extends Controller
                 $add_data->Physial_or_Virtual = $py_or_vir;
                 $add_data->availble_vm = "No";
                 $add_data->virtual_serv_token = "";
-                $add_data->Serial_No = $seri_no;
+                $add_data->Serial_No = $Serial_No;
                 $add_data->Asset_No = $asset_no;
+                $add_data->serv_location = $serv_location;
                 $add_data->Purchase_year = $date;
                 $add_data->Rack_No = $rack_no;
                 $add_data->Rack_unit_No = $rack_u_no;
@@ -203,7 +276,7 @@ class serverdetailsController extends Controller
 
         $add_data = new followup();
         $add_data->server_type = $py_or_vir;
-        $add_data->Serial_no = $seri_no;
+        $add_data->Serial_no = $Serial_No;
         $add_data->Asset_no = $asset_no;
         $add_data->Rack_no = $rack_no;
         $add_data->Rack_unit_No = $rack_u_no;
@@ -213,7 +286,7 @@ class serverdetailsController extends Controller
         $add_data->update_user_name = $created_by;
         $add_data->save();
 
-        return response()->json(['success'=>'Server Details added succesfully..!', 'vir_pyname' => $vir_pyname]);
+        return response()->json(['success'=>'Server Details added succesfully..!', 'vir_pyname' => $vir_pyname, 'ip_errors'=>$ip_errors]);
     }
 
     public function find_server_details(Request $request)
@@ -221,27 +294,41 @@ class serverdetailsController extends Controller
         $ser_no = $request->ser_no;
         $asstno = $request->asstno;
         $ip = $request->ip;
-        $assttype = $request->assttype;
+        // $assttype = $request->assttype;
 
-        if ($assttype == "Virtual") 
+        if ($ip != null)
+        {
+         
+        $find_type_pys_server = serverdetails::where('ip_address', $ip)->count();
+        $find_type_vir_server = py_vir_server_table::where('virtual_machine_ip', $ip)->count();
+
+        if ($find_type_pys_server > 0 && $find_type_vir_server > 0) 
+        {
+            $errors = "somethig wrong please try again.";
+        }
+
+        if ($find_type_vir_server > 0) 
         {
             $vir_query = DB::table('py_vir_server_tables')->where('vir_status', '1');
-            if ($ip != null)
-            {
-                $vir_query->where('virtual_machine_ip', $ip);
-            }
 
-            $vir_data = $vir_query->orderBy('id','desc')->get();
-
-            $premission = Auth::user()->premission;
-            return response()->json(['success'=>'Server Details find succesfully..!', 'premission' => $premission, 'vir_query' => $vir_data]);
-
-
+                if ($ip != null)
+                {
+                    $vir_query->where('virtual_machine_ip', $ip);
+                }
+    
+                $vir_data = $vir_query->orderBy('id','desc')->get();
+    
+                $premission = Auth::user()->premission;
+                return response()->json(['success'=>'Server Details find succesfully..!',
+                'premission' => $premission, 
+                'vir_query' => $vir_data,
+                'assettype' => 'Virtual',
+                ]);
+    
         }
-        else
+        else if ($find_type_pys_server > 0) 
         {
-            
-            $query = DB::table('serverdetails')->where('Physial_or_Virtual', $assttype)->where('Status', '1');
+            $query = DB::table('serverdetails')->where('Status', '1');
             if ($ser_no != null)
             {
                 $query->where('Serial_No', $ser_no);
@@ -257,10 +344,49 @@ class serverdetailsController extends Controller
                 $data = $query->orderBy('id','desc')->get();
 
                 $premission = Auth::user()->premission;
-                return response()->json(['success'=>'Server Details find succesfully..!', 'data' => $data, 'premission' => $premission]);
+                return response()->json([
+                    'success'=>'Server Details find succesfully..!', 
+                    'data' => $data, 
+                    'premission' => $premission,
+                    'assettype' => 'Physical',
+                    ]);   
+        }
+
+    }
+
+        else
+        {
+            $query = DB::table('serverdetails')->where('Status', '1');
+            if ($ser_no != null)
+            {
+                $query->where('Serial_No', $ser_no);
+            }
+            if ($asstno != null)
+            {
+                $query->where('Asset_No', $asstno);
+            }
+            if ($ip != null)
+            {
+                $query->where('ip_address', $ip);
+            }
+                $data = $query->orderBy('id','desc')->get();
+
+                $premission = Auth::user()->premission;
+                return response()->json([
+                    'success'=>'Server Details find succesfully..!', 
+                    'data' => $data, 
+                    'premission' => $premission,
+                    'assettype' => 'Physical'
+                    
+                    ]);   
+
+
 
         }
 
+
+
+       
         
     }
 
@@ -296,8 +422,9 @@ class serverdetailsController extends Controller
     {
     $id = $request->id;
     $py_or_vir = $request->py_or_vir;
-    $seri_no = $request->seri_no;
-    $asset_no = $request->asset_no;
+    $seri_no = $request->Serial_No;
+    $asset_no = $request->Asset_no;
+    $serv_location = $request->serv_location;
     $pur_year = $request->pur_year;
     $rack_no = $request->rack_no;
     $rack_u_no = $request->rack_u_no;
@@ -308,10 +435,86 @@ class serverdetailsController extends Controller
     $update_by = Auth::user()->name;
     $update_user_id = Auth::user()->id;
 
+    $errors = [
+        'Asset_no.unique' => 'The Asset Number has already been taken.',
+        'Serial_No.unique' => 'The Serial Number has already been taken.',
+        
+      ];
+
     $update_data = serverdetails::find($id);
+    $db_asset = $update_data->Asset_No;
+    $db_Serial_No = $update_data->Serial_No;
+    $db_ip_address = $update_data->ip_address;
+    
+    if ($db_asset != "" || $db_asset != null) 
+    {
+        if ($db_asset != $asset_no) 
+        {
+            $find_asset = serverdetails::where('Asset_no', $asset_no)->count();
+
+            if ($find_asset > 0) 
+            {   
+                $this->validate($request, [
+                    'Asset_no' => 'unique:serverdetails|numeric',
+                ],$errors);
+            }
+        }
+    }
+
+    if ($db_Serial_No != "" || $db_Serial_No != null) 
+    {
+        if ($db_Serial_No != $seri_no) 
+        {
+            $find_serial = serverdetails::where('Serial_No', $seri_no)->count();
+
+            if ($find_serial > 0) 
+            {   
+                $this->validate($request, [
+                    'Serial_No' => 'unique:serverdetails',
+                ],$errors);
+            }
+        }
+    }
+
+    $ip_errors = "";
+    if ($db_ip_address != "" || $db_ip_address != null) 
+    {
+        if ($db_ip_address != $ip_address) 
+        {
+            $find_server_ipaddress= serverdetails::where('ip_address', $ip_address)->count();
+            $find_virtual_machine_ip= py_vir_server_table::where('virtual_machine_ip', $ip_address)->count();
+            $ip_total_count = $find_server_ipaddress + $find_virtual_machine_ip;
+
+            if ($ip_total_count > 0) 
+            {   
+                $ip_errors = "The IP Address has already been taken.";
+            }
+            else
+            {
+                $ip_errors = "";
+            }
+        }
+    }
+    
+
+
+    if ($py_or_vir == "NAS") {
+        $os = "";
+        $apps = "";
+    }
+
+    if ($py_or_vir == "Switch" || $py_or_vir == "Router"|| $py_or_vir == "Tape Loader"|| $py_or_vir == "KVM") {
+        $os = "";
+        $apps = "";
+        $ip_address = "";
+    }
+
+    
+
     $update_data->Physial_or_Virtual = $py_or_vir;
     $update_data->Serial_No = $seri_no;
     $update_data->Asset_No = $asset_no;
+    $update_data->serv_location = $serv_location;
     $update_data->Purchase_year = $pur_year;
     $update_data->Rack_No = $rack_no;
     $update_data->Rack_unit_No = $rack_u_no;
@@ -333,7 +536,7 @@ class serverdetailsController extends Controller
     $add_data->update_user_name = $update_by;
     $add_data->save();
 
-    return response()->json(['success'=>'Server Details Update Succesfully..!']);
+    return response()->json(['success'=>'Server Details Update Succesfully..!', 'ip_errors'=>$ip_errors]);
     }
 
     public function remove_server_details(Request $request)
@@ -382,6 +585,25 @@ class serverdetailsController extends Controller
         $added_by = Auth::user()->name;
         $add_user_id = Auth::user()->id;
         $vir_serve_token = rand(10,100000);
+
+        $ip_errors = "";
+        if ($inst_vm_ip != "" || $inst_vm_ip != null) 
+        {
+            $find_server_ipaddress= serverdetails::where('ip_address', $inst_vm_ip)->count();
+            $find_virtual_machine_ip= py_vir_server_table::where('virtual_machine_ip', $inst_vm_ip)->count();
+            $ip_total_count = $find_server_ipaddress + $find_virtual_machine_ip;
+
+            if ($ip_total_count > 0) 
+            {   
+                $ip_errors = "The IP Address has already been taken.";
+            }
+            else
+            {
+                $ip_errors = "";
+            }
+        }
+
+
 
         if ($availble_vm == "No") 
         {
@@ -438,7 +660,7 @@ class serverdetailsController extends Controller
         }
 
         
-        return response()->json(['success'=>'Virtual Server Details Insert Succesfully..!', 'vir_server_data' => $vir_server_token]);
+        return response()->json(['success'=>'Virtual Server Details Insert Succesfully..!', 'vir_server_data' => $vir_server_token, 'ip_errors'=>$ip_errors]);
     }
 
     public function vir_data_delete(Request $request)

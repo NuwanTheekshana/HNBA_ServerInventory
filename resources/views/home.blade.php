@@ -19,15 +19,15 @@
    <label for="ip" class="col form-label">IP Address</label>
    <input type="text" id="ip" class="form-control col" aria-describedby="ip" name="ip">
 
-   <label for="assttype" class="col form-label">Asset Type &nbsp;<i style="color: red;">*</i></label>
+   <!-- <label for="assttype" class="col form-label">Asset Type &nbsp;<i style="color: red;">*</i></label>
    <select id="assttype" class="form-control col" name="assttype">
     <option value="">Select Asset Type</option>
     <option value="Physical">Physical Server</option>
     <option value="Virtual">Virtual Server</option>
-    <option value="NAS">NAS</option>
+    <option value="NAS">Stroage</option>
     <option value="Switch">Network Switch</option>
     <option value="Router">Network Router</option>
-  </select>
+  </select> -->
   
   </div>
 

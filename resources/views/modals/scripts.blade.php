@@ -11,18 +11,20 @@
   {
       var py_or_vir = $('#py_or_vir').val();
       var serv_option_in = $('#serv_option_in').val();
-      var seri_no = $('#seri_no').val();
-      var asset_no = $('#asset_no').val();
+      var Serial_No = $('#seri_no').val();
+      var Asset_no = $('#Asset_No').val();
+      var serv_location = $('#serv_location').val();
       var pur_year = $('#pur_year').val();
       var rack_no = $('#rack_no').val();
       var rack_u_no = $('#rack_u_no').val();
       var pro_model = $('#pro_model').val();
       var ip_address = $('#ip_address').val();
       var os = $('#os').val();
-      var vir_ipadd = $('#vir_ipadd').val();
+      var virtual_machine_ip = $('#vir_ipadd').val();
       var vir_os = $('#vir_os').val();
       var vir_name = $('#vir_name').val();
       var vir_application = $('#vir_application').val();
+
 
       // var apps = $('input[name^=apps]');
       // var apps = apps.map(function(idx, elem) {
@@ -69,9 +71,20 @@
         },
            type:'POST',
            url:'{{url("/add_server_details")}}',
-           data:{py_or_vir:py_or_vir, serv_option_in:serv_option_in, vir_pyname:vir_pyname, vir_pyipadd:vir_pyipadd, vir_pyos:vir_pyos, vir_pyapplication:vir_pyapplication,seri_no:seri_no, asset_no:asset_no, pur_year:pur_year, rack_no, rack_u_no:rack_u_no, pro_model:pro_model, ip_address:ip_address, os:os, apps:apps, vir_ipadd:vir_ipadd, vir_os:vir_os, vir_name:vir_name, vir_application:vir_application},
+           data:{py_or_vir:py_or_vir, serv_option_in:serv_option_in, vir_pyname:vir_pyname, vir_pyipadd:vir_pyipadd, vir_pyos:vir_pyos, vir_pyapplication:vir_pyapplication,Serial_No:Serial_No, Asset_no:Asset_no, pur_year:pur_year, rack_no, rack_u_no:rack_u_no, pro_model:pro_model, ip_address:ip_address, os:os, apps:apps, virtual_machine_ip:virtual_machine_ip, vir_os:vir_os, vir_name:vir_name, vir_application:vir_application, serv_location:serv_location},
            success:function(data){
-             console.log(data.vir_pyname);
+
+             console.log(data.ip_errors);
+             if (data.ip_errors != "") 
+             {
+              $.bootstrapGrowl('<i><span class = "glyphicon glyphicon-info-sign"></span>&nbsp;&nbsp;&nbsp;Warning!&nbsp;'+data.ip_errors+'</i>',
+                    {
+                        type: 'danger',
+                        width: 400,
+                        delay: 10000,
+                    });
+                return false; 
+             }
               $('#addnew_modal').modal('hide');
               $.bootstrapGrowl('<span class = "fas fa-info-circle"></span>&nbsp;&nbsp;&nbsp;Success&nbsp;!&nbsp;'+data.success,
               {
@@ -83,7 +96,38 @@
                 location.reload();
               }, 4000);
               
-           }
+           },
+           error: function(response) 
+        {
+            var ip_address = response.responseJSON.errors;
+            var Asset_no = response.responseJSON.errors.Asset_no;
+            var Serial_No = response.responseJSON.errors.Serial_No;
+
+
+            if (Asset_no) 
+            {
+              $.bootstrapGrowl('<i><span class = "glyphicon glyphicon-info-sign"></span>&nbsp;&nbsp;&nbsp;Warning!&nbsp;'+Asset_no+'</i>',
+                    {
+                        type: 'danger',
+                        width: 400,
+                        delay: 10000,
+                    });
+                return false;  
+            }
+
+            if (Serial_No) 
+            {
+              $.bootstrapGrowl('<i><span class = "glyphicon glyphicon-info-sign"></span>&nbsp;&nbsp;&nbsp;Warning!&nbsp;'+Serial_No+'</i>',
+                    {
+                        type: 'danger',
+                        width: 400,
+                        delay: 10000,
+                    });
+                return false;  
+            }
+            
+        },
+           
         });
   });
 </script>
@@ -97,16 +141,16 @@
       var ip = $('#ip').val();
       var assttype = $('#assttype').val();
 
-      if (assttype == "" || assttype == null) 
-      {
-        $.bootstrapGrowl('<span class = "fas fa-info-circle"></span>&nbsp;&nbsp;&nbsp;Warning&nbsp;!&nbsp;Asset type is required..!',
-              {
-                type: 'danger',
-                width: 500,
-                delay: 5000,  
-              });
-        return false;
-      }
+      // if (assttype == "" || assttype == null) 
+      // {
+      //   $.bootstrapGrowl('<span class = "fas fa-info-circle"></span>&nbsp;&nbsp;&nbsp;Warning&nbsp;!&nbsp;Asset type is required..!',
+      //         {
+      //           type: 'danger',
+      //           width: 500,
+      //           delay: 5000,  
+      //         });
+      //   return false;
+      // }
 
       $.ajax({
         headers: {
@@ -116,11 +160,10 @@
            url:'{{url("/find_server_details")}}',
            data:{ser_no:ser_no,asstno:asstno,ip:ip,assttype:assttype},
            success:function(jsonData){
+             var assettype = jsonData.assettype;
              var premission = jsonData.premission;
 
-           
-
-            if (assttype == "Virtual") 
+            if (assettype == "Virtual") 
             {
               
               $('#find_vir_server_div').show(1000);
@@ -250,7 +293,20 @@
 
       
               
-           }
+           },
+
+           error: function(response) 
+        {
+            var errors = response.responseJSON.errors;
+
+            $.bootstrapGrowl('<i><span class = "glyphicon glyphicon-info-sign"></span>&nbsp;&nbsp;&nbsp;Warning!&nbsp;somethig wrong please try again.</i>',
+                    {
+                        type: 'danger',
+                        width: 500,
+                        delay: 10000,
+                    });
+                return false;  
+        },
 
         });
 
@@ -279,6 +335,7 @@
             $('#update_ip_address').val(jsonData.viewdata.ip_address);
             $('#update_os').val(jsonData.viewdata.OS);
             $('#update_apps').val(jsonData.viewdata.Applications);
+            $('#update_serv_location').val(jsonData.viewdata.serv_location);
 
             if (jsonData.viewdata.Physial_or_Virtual == "Virtual") 
             {
@@ -349,8 +406,9 @@
   {
       var id = $('#update_id').val();
       var py_or_vir = $('#update_py_or_vir').val();
-      var seri_no = $('#update_seri_no').val();
-      var asset_no = $('#update_asset_no').val();
+      var Serial_No = $('#update_seri_no').val();
+      var Asset_no = $('#update_asset_no').val();
+      var serv_location = $('#update_serv_location').val();
       var pur_year = $('#update_pur_year').val();
       var rack_no = $('#update_rack_no').val();
       var rack_u_no = $('#update_rack_u_no').val();
@@ -397,8 +455,19 @@
         },
            type:'GET',
            url:'{{url("/update_server_details")}}',
-           data:{id:id, py_or_vir:py_or_vir, seri_no:seri_no, asset_no:asset_no, pur_year:pur_year, rack_no, rack_u_no:rack_u_no, pro_model:pro_model, ip_address:ip_address, os:os, apps:apps},
+           data:{id:id, py_or_vir:py_or_vir, Serial_No:Serial_No, Asset_no:Asset_no, pur_year:pur_year, rack_no, rack_u_no:rack_u_no, pro_model:pro_model, ip_address:ip_address, os:os, apps:apps, serv_location:serv_location},
            success:function(data){
+
+             if (data.ip_errors != "") 
+             {
+              $.bootstrapGrowl('<i><span class = "glyphicon glyphicon-info-sign"></span>&nbsp;&nbsp;&nbsp;Warning!&nbsp;'+data.ip_errors+'</i>',
+                    {
+                        type: 'danger',
+                        width: 400,
+                        delay: 10000,
+                    });
+                return false; 
+             }
              $('#update_modal').modal('hide');
              $("#find_data_card").load(" #find_data_card > *");
 
@@ -409,7 +478,38 @@
                 delay: 5000,  
               });
 
-           }
+           },
+           error: function(response) 
+        {
+            var ip_address = response.responseJSON.errors;
+            var Asset_no = response.responseJSON.errors.Asset_no;
+            var Serial_No = response.responseJSON.errors.Serial_No;
+
+
+            if (Asset_no) 
+            {
+              $.bootstrapGrowl('<i><span class = "glyphicon glyphicon-info-sign"></span>&nbsp;&nbsp;&nbsp;Warning!&nbsp;'+Asset_no+'</i>',
+                    {
+                        type: 'danger',
+                        width: 400,
+                        delay: 10000,
+                    });
+                return false;  
+            }
+
+            if (Serial_No) 
+            {
+              $.bootstrapGrowl('<i><span class = "glyphicon glyphicon-info-sign"></span>&nbsp;&nbsp;&nbsp;Warning!&nbsp;'+Serial_No+'</i>',
+                    {
+                        type: 'danger',
+                        width: 400,
+                        delay: 10000,
+                    });
+                return false;  
+            }
+            
+        }
+
 
         });
 
@@ -427,6 +527,8 @@
            url:'{{url("/view_server_details")}}',
            data:{id:id},
            success:function(jsonData){
+              // console.log(jsonData.viewdata.Physial_or_Virtual);
+              // return false;
 
             $('#view_id').val(jsonData.viewdata.id);
             $('#view_py_or_vir').val(jsonData.viewdata.Physial_or_Virtual);
@@ -440,6 +542,50 @@
             $('#view_os').val(jsonData.viewdata.OS);
             $('#view_apps').val(jsonData.viewdata.Applications);
             $('#view_create').val(jsonData.viewdata.Created_by);
+            $('#view_serv_location').val(jsonData.viewdata.serv_location);
+
+            // others
+            
+            $('#view_id_other').val(jsonData.viewdata.id);
+            $('#view_py_or_vir_other').val(jsonData.viewdata.Physial_or_Virtual);
+            $('#view_seri_no_other').val(jsonData.viewdata.Serial_No);
+            $('#view_asset_no_other').val(jsonData.viewdata.Asset_No);
+            $('#view_pur_year_other').val(jsonData.viewdata.Purchase_year);
+            $('#view_rack_no_other').val(jsonData.viewdata.Rack_No);
+            $('#view_rack_u_no_other').val(jsonData.viewdata.Rack_unit_No);
+            $('#view_pro_model_other').val(jsonData.viewdata.product_and_modal);
+            $('#view_ip_address_other').val(jsonData.viewdata.ip_address);
+            $('#view_os_other').val(jsonData.viewdata.OS);
+            $('#view_apps_other').val(jsonData.viewdata.Applications);
+            $('#view_create_other').val(jsonData.viewdata.Created_by);
+            $('#view_serv_location_other').val(jsonData.viewdata.serv_location);
+
+            console.log(jsonData.viewdata.Physial_or_Virtual);
+            var xs = jsonData.viewdata.Physial_or_Virtual;
+            if (xs != "Physical")
+            {
+              $('#main_view_div').hide();
+              $('#other_main_div').show();
+              $('#nav_div').hide();
+            }
+            else
+            {
+              $('#nav-view_servede').show();
+              $('#main_view_div').show();
+              $('#other_main_div').hide();
+              $('#nav_div').show();
+            }
+
+            // other assets
+            if (xs == "NAS") {
+                $('#view_ip_address_val_div').show();
+            }
+            else
+            {
+                $('#view_ip_address_val_div').hide();
+            }
+            
+            
             $('#view_modal').modal('show');
 
             console.log(jsonData.vir_server_data);
@@ -562,7 +708,7 @@
             $('#vir_server_data').hide(1000);
         }
 
-        else if (x == "Switch" || x == "Router") 
+        else if (x == "Switch" || x == "Router" || x == "Tape Loader" || x == "KVM") 
         {
             $('#virual_list').hide(1000);
             $('#phy_modal').show(1000);
@@ -919,6 +1065,20 @@
            data: {vir_torken:vir_torken, py_id:py_id, availble_vm:availble_vm,insert_vmname:insert_vmname, insert_vmip:insert_vmip, insert_vmos:insert_vmos, insert_vmapp:insert_vmapp},
            success:function(jsonData){
              console.log(jsonData.data);
+
+             if (data.ip_errors != "") 
+             {
+              $.bootstrapGrowl('<i><span class = "glyphicon glyphicon-info-sign"></span>&nbsp;&nbsp;&nbsp;Warning!&nbsp;'+data.ip_errors+'</i>',
+                    {
+                        type: 'danger',
+                        width: 400,
+                        delay: 10000,
+                    });
+                return false; 
+             }
+
+
+
             $.bootstrapGrowl('<span class = "fas fa-info-circle"></span>&nbsp;&nbsp;&nbsp;Success&nbsp;!&nbsp;'+jsonData.success,
               {
                 type: 'success',
@@ -952,7 +1112,8 @@
               $('#insert_vir_btn').show(1000);
               $('#clone_txt_input').empty();
               count = 0;
-           }
+           },
+
 
         });
   });
@@ -1144,7 +1305,6 @@
          url:'{{url("/view_vir_server_details")}}',
          data:{token:token},
          success:function(jsonData){
-
           $('#view_id').val(jsonData.viewdata.id);
           $('#view_py_or_vir').val(jsonData.viewdata.Physial_or_Virtual);
           $('#view_seri_no').val(jsonData.viewdata.Serial_No);
@@ -1246,7 +1406,7 @@
           $('#ser_no').prop('disabled', true);
           $('#asstno').prop('disabled', true);
       }
-      else if (assttype == "Switch" || assttype == "Router") 
+      else if (assttype == "Switch" || assttype == "Router" || assttype == "Tape Loader" || assttype == "KVM")  
       {
           $('#ip').prop('disabled', true);
       }

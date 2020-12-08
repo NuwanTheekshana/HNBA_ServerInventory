@@ -20,6 +20,7 @@ class CreateServerdetailsTable extends Migration
             $table->string('virtual_serv_token');
             $table->string('Serial_No');
             $table->string('Asset_No');
+            $table->string('serv_location');
             $table->date('Purchase_year');
             $table->string('Rack_No');
             $table->string('Rack_unit_No');
@@ -37,7 +38,7 @@ class CreateServerdetailsTable extends Migration
             $table->timestamps();
         });
     }
-
+    
     /**
      * Reverse the migrations.
      *

@@ -9,7 +9,7 @@ class ListExport implements FromCollection, WithHeadings
 {
   public function collection()
   {
-      $Request = serverdetails::all();
+      $Request = serverdetails::where('Status', '1')->get();
       return $Request;
   }
 
@@ -22,6 +22,7 @@ class ListExport implements FromCollection, WithHeadings
             'virtual_serv_token',
             'Serial_No',
             'Asset_No',
+            'serv_location',
             'Purchase_year',
             'Rack_No',
             'Rack_unit_No',
