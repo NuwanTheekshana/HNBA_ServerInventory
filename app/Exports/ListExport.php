@@ -36,6 +36,7 @@ class ListExport implements FromCollection, WithHeadings
             'vir_application',
             'Created_user_id',
             'Created_by',
+            'power_status',
             'Status',
             'created_at',
             'updated_at',

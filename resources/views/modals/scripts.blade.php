@@ -212,18 +212,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
             }
 
 
@@ -247,8 +235,24 @@
                 { data : "ip_address" },
                 { data : "id" , render : function (data, type, row, meta, rowData) 
                 {
-                        return "<center><button onclick=edit('"+row.id+"'); class='btn btn-warning btn-sm btn_style' style='background-color:orange;'><i class='fa fa-edit'></i></button>  <button onclick=view('"+row.id+"'); class='btn btn-success btn-sm btn_style' style='background-color:green;'><i class='fa fa-server'></i></button> <button onclick=remove('"+row.id+"'); class='btn btn-danger btn-sm btn_style' style='background-color:red;'><i class='fa fa-trash'></i></button> </center>"
-                }},
+                  if (row.Physial_or_Virtual === 'Physical' || row.Physial_or_Virtual === 'NAS') 
+                  {
+                      if (row.power_status == "0") 
+                      {
+                        return "<center><button onclick=edit('"+row.id+"'); class='btn btn-warning btn-sm btn_style' style='background-color:orange;'><i class='fa fa-edit'></i></button>  <button onclick=view('"+row.id+"'); class='btn btn-success btn-sm btn_style' style='background-color:green;'><i class='fa fa-server'></i></button>   <button onclick=swich_option('"+row.id+"'); class='btn btn-primary btn-sm btn_style' style='background-color:#011842;'><i class='fa fa-power-off' aria-hidden='true'></i></button>   <button onclick=remove('"+row.id+"'); class='btn btn-danger btn-sm btn_style' style='background-color:red;'><i class='fa fa-trash'></i></button> </center>";
+                      } 
+                      else 
+                      {
+                        return "<center><button onclick=edit('"+row.id+"'); class='btn btn-warning btn-sm btn_style' style='background-color:orange;'><i class='fa fa-edit'></i></button>  <button onclick=view('"+row.id+"'); class='btn btn-success btn-sm btn_style' style='background-color:green;'><i class='fa fa-server'></i></button>   <button onclick=swich_option('"+row.id+"'); class='btn btn-primary btn-sm btn_style'><i class='fa fa-power-off' aria-hidden='true'></i></button>   <button onclick=remove('"+row.id+"'); class='btn btn-danger btn-sm btn_style' style='background-color:red;'><i class='fa fa-trash'></i></button> </center>";
+                      }
+
+                  }
+                  else 
+                  {
+                    return "<center><button onclick=edit('"+row.id+"'); class='btn btn-warning btn-sm btn_style' style='background-color:orange;'><i class='fa fa-edit'></i></button>  <button onclick=view('"+row.id+"'); class='btn btn-success btn-sm btn_style' style='background-color:green;'><i class='fa fa-server'></i></button> <button onclick=remove('"+row.id+"'); class='btn btn-danger btn-sm btn_style' style='background-color:red;'><i class='fa fa-trash'></i></button> </center>";
+                  }
+
+                  }},
 
                 ],
            
@@ -644,6 +648,53 @@
         });
   }
 </script>
+
+
+<script>
+  function swich_option(id) 
+  {
+        // if (confirm('Are you sure you want to remove this record?')) 
+        // {
+        // } 
+        // else 
+        // {
+        //    return false;
+        // }
+
+        var txt;
+        var remarktxt = prompt("Remark :", "");
+        if (remarktxt == null || remarktxt == "") 
+        {
+          alert('Remark required..!')
+          return false;
+        }
+
+        $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+           type:'GET',
+           url:'{{url("/swich_option")}}',
+           data:{id:id,remarktxt:remarktxt},
+           success:function(data){
+            $("#find_server_details").load(" #find_server_details > *");
+            $.bootstrapGrowl('<span class = "fas fa-info-circle"></span>&nbsp;&nbsp;&nbsp;Success&nbsp;!&nbsp;'+data.success,
+              {
+                type: 'success',
+                width: 500,
+                delay: 5000,  
+              });
+
+
+           }
+
+        });
+  }
+</script>
+
+
+
+
     
 <script>
     $('#py_or_vir').change(function () 

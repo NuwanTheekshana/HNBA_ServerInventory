@@ -51,7 +51,7 @@ class serverdetailsController extends Controller
 
         if ($asset_no != "" || $asset_no != null) 
         {
-            $find_asset = serverdetails::where('Asset_no', $asset_no)->count();
+            $find_asset = serverdetails::where('Asset_no', $asset_no)->where('Status', '1')->count();
 
             if ($find_asset > 0) 
             {   
@@ -63,7 +63,7 @@ class serverdetailsController extends Controller
 
         if ($Serial_No != "" || $Serial_No != null) 
         {
-            $find_serial = serverdetails::where('Serial_No', $Serial_No)->count();
+            $find_serial = serverdetails::where('Serial_No', $Serial_No)->where('Status', '1')->count();
 
             if ($find_serial > 0) 
             {   
@@ -76,8 +76,8 @@ class serverdetailsController extends Controller
         $ip_errors = "";
         if ($ip_address != "" || $ip_address != null) 
         {
-            $find_server_ipaddress= serverdetails::where('ip_address', $ip_address)->count();
-            $find_virtual_machine_ip= py_vir_server_table::where('virtual_machine_ip', $ip_address)->count();
+            $find_server_ipaddress= serverdetails::where('ip_address', $ip_address)->where('Status', '1')->count();
+            $find_virtual_machine_ip= py_vir_server_table::where('virtual_machine_ip', $ip_address)->where('vir_status', '1')->count();
             $ip_total_count = $find_server_ipaddress + $find_virtual_machine_ip;
 
             if ($ip_total_count > 0) 
@@ -92,8 +92,8 @@ class serverdetailsController extends Controller
 
         if ($virtual_machine_ip != "" || $virtual_machine_ip != null) 
         {
-            $find_server_ipaddress= serverdetails::where('ip_address', $virtual_machine_ip)->count();
-            $find_virtual_machine_ip= py_vir_server_table::where('virtual_machine_ip', $virtual_machine_ip)->count();
+            $find_server_ipaddress= serverdetails::where('ip_address', $virtual_machine_ip)->where('Status', '1')->count();
+            $find_virtual_machine_ip= py_vir_server_table::where('virtual_machine_ip', $virtual_machine_ip)->where('vir_status', '1')->count();
             $ip_total_count = $find_server_ipaddress + $find_virtual_machine_ip;
 
             if ($ip_total_count > 0) 
@@ -282,6 +282,7 @@ class serverdetailsController extends Controller
         $add_data->Rack_unit_No = $rack_u_no;
         $add_data->product_and_modal = $pro_model;
         $add_data->status = "Create";
+        $add_data->remark = "";
         $add_data->update_user_id = $created_user_id;
         $add_data->update_user_name = $created_by;
         $add_data->save();
@@ -450,7 +451,7 @@ class serverdetailsController extends Controller
     {
         if ($db_asset != $asset_no) 
         {
-            $find_asset = serverdetails::where('Asset_no', $asset_no)->count();
+            $find_asset = serverdetails::where('Asset_no', $asset_no)->where('Status', '1')->count();
 
             if ($find_asset > 0) 
             {   
@@ -465,7 +466,7 @@ class serverdetailsController extends Controller
     {
         if ($db_Serial_No != $seri_no) 
         {
-            $find_serial = serverdetails::where('Serial_No', $seri_no)->count();
+            $find_serial = serverdetails::where('Serial_No', $seri_no)->where('Status', '1')->count();
 
             if ($find_serial > 0) 
             {   
@@ -481,8 +482,8 @@ class serverdetailsController extends Controller
     {
         if ($db_ip_address != $ip_address) 
         {
-            $find_server_ipaddress= serverdetails::where('ip_address', $ip_address)->count();
-            $find_virtual_machine_ip= py_vir_server_table::where('virtual_machine_ip', $ip_address)->count();
+            $find_server_ipaddress= serverdetails::where('ip_address', $ip_address)->where('Status', '1')->count();
+            $find_virtual_machine_ip= py_vir_server_table::where('virtual_machine_ip', $ip_address)->where('vir_status', '1')->count();
             $ip_total_count = $find_server_ipaddress + $find_virtual_machine_ip;
 
             if ($ip_total_count > 0) 
@@ -532,6 +533,7 @@ class serverdetailsController extends Controller
     $add_data->Rack_unit_No = $rack_u_no;
     $add_data->product_and_modal = $pro_model;
     $add_data->status = "Update";
+    $add_data->remark = "";
     $add_data->update_user_id = $update_user_id;
     $add_data->update_user_name = $update_by;
     $add_data->save();
@@ -552,6 +554,16 @@ class serverdetailsController extends Controller
         $rack_no = $remove_data->Rack_No;
         $rack_u_no = $remove_data->Rack_unit_No;
         $pro_model = $remove_data->product_and_modal;
+        $virtual_serv_token = $remove_data->virtual_serv_token;
+
+        $py_vir_server_table = py_vir_server_table::where('virtual_serv_token', $virtual_serv_token)->pluck('id')->toArray();
+
+        foreach ($py_vir_server_table as $key => $id) 
+        {
+            $remove_vir_data = py_vir_server_table::find($id);
+            $remove_vir_data->vir_status = 0;
+            $remove_vir_data->update();
+        }
 
 
         $add_data = new followup();
@@ -562,6 +574,7 @@ class serverdetailsController extends Controller
         $add_data->Rack_unit_No = $rack_u_no;
         $add_data->product_and_modal = $pro_model;
         $add_data->status = "Remove";
+        $add_data->remark = "";
         $add_data->update_user_id = $removed_user_id;
         $add_data->update_user_name = $removed_by;
         $add_data->save();
@@ -589,8 +602,8 @@ class serverdetailsController extends Controller
         $ip_errors = "";
         if ($inst_vm_ip != "" || $inst_vm_ip != null) 
         {
-            $find_server_ipaddress= serverdetails::where('ip_address', $inst_vm_ip)->count();
-            $find_virtual_machine_ip= py_vir_server_table::where('virtual_machine_ip', $inst_vm_ip)->count();
+            $find_server_ipaddress= serverdetails::where('ip_address', $inst_vm_ip)->where('Status', '1')->count();
+            $find_virtual_machine_ip= py_vir_server_table::where('virtual_machine_ip', $inst_vm_ip)->where('vir_status', '1')->count();
             $ip_total_count = $find_server_ipaddress + $find_virtual_machine_ip;
 
             if ($ip_total_count > 0) 
@@ -724,5 +737,57 @@ class serverdetailsController extends Controller
     public function vir_report()
     {
         return Excel::download(new ListExport2, 'vir_report.xlsx');
+    }
+
+
+    public function swich_option(Request $request)
+    {
+        $id = $request->id;
+        $remarktxt = $request->remarktxt;
+        $swich_by = Auth::user()->name;
+        $swich_user_id = Auth::user()->id;
+        
+        $swich_data = serverdetails::find($id);
+        $server_type = $swich_data->Physial_or_Virtual;
+        $seri_no = $swich_data->Serial_No;
+        $asset_no = $swich_data->Asset_No;
+        $rack_no = $swich_data->Rack_No;
+        $rack_u_no = $swich_data->Rack_unit_No;
+        $pro_model = $swich_data->product_and_modal;
+
+        $power_status = $swich_data->power_status;
+
+        if ($power_status == 0) 
+        {
+            $power_status_val = 1;
+            $power_val = "Power on";
+        }
+        if ($power_status == 1)
+        {
+            $power_status_val = 0;
+            $power_val = "Power off";
+        }
+
+
+        $add_data = new followup();
+        $add_data->server_type = $server_type;
+        $add_data->Serial_no = $seri_no;
+        $add_data->Asset_no = $asset_no;
+        $add_data->Rack_no = $rack_no;
+        $add_data->Rack_unit_No = $rack_u_no;
+        $add_data->product_and_modal = $pro_model;
+        $add_data->status = $power_val;
+        $add_data->remark = $remarktxt;
+        $add_data->update_user_id = $swich_user_id;
+        $add_data->update_user_name = $swich_by;
+        $add_data->save();
+
+        $swich_data->power_status = $power_status_val;
+        $swich_data->update();
+
+
+        return response()->json(['success'=>'Power Status update Succesfully..!']);
+
+
     }
 }

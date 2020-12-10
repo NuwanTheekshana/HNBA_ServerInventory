@@ -22,6 +22,7 @@ class CreateFollowupsTable extends Migration
             $table->string('Rack_unit_No');
             $table->string('product_and_modal');
             $table->string('status');
+            $table->string('remark');
             $table->string('update_user_id');
             $table->string('update_user_name');
             $table->timestamps();

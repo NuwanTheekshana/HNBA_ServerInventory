@@ -13,7 +13,7 @@ class ListExport2 implements FromCollection, WithHeadings
        
     //   $vir_Request = DB::select('select py_vir_server_tables.*,serverdetails.* FROM py_vir_server_tables INNER JOIN serverdetails ON py_vir_server_tables.virtual_serv_token = serverdetails.virtual_serv_token');
       $vir_Request = DB::table('py_vir_server_tables')
-      ->select('py_vir_server_tables.id', 'py_vir_server_tables.virtual_serv_token', 'py_vir_server_tables.vir_machine_name', 'py_vir_server_tables.virtual_machine_ip', 'py_vir_server_tables.virtual_machine_os', 'py_vir_server_tables.virtual_apps' , 'py_vir_server_tables.added_user',  'py_vir_server_tables.vir_status', 'serverdetails.Physial_or_Virtual', 'serverdetails.availble_vm', 'serverdetails.Serial_No', 'serverdetails.Asset_No' , 'serverdetails.serv_location','serverdetails.Purchase_year', 'serverdetails.Rack_No' , 'serverdetails.Rack_unit_No', 'serverdetails.product_and_modal', 'serverdetails.ip_address', 'serverdetails.OS', 'serverdetails.Applications', 'serverdetails.Status')
+      ->select('py_vir_server_tables.id', 'py_vir_server_tables.virtual_serv_token', 'py_vir_server_tables.vir_machine_name', 'py_vir_server_tables.virtual_machine_ip', 'py_vir_server_tables.virtual_machine_os', 'py_vir_server_tables.virtual_apps' , 'py_vir_server_tables.added_user',  'py_vir_server_tables.vir_status', 'serverdetails.Physial_or_Virtual', 'serverdetails.availble_vm', 'serverdetails.Serial_No', 'serverdetails.Asset_No' , 'serverdetails.serv_location','serverdetails.Purchase_year', 'serverdetails.Rack_No' , 'serverdetails.Rack_unit_No', 'serverdetails.product_and_modal', 'serverdetails.ip_address', 'serverdetails.OS', 'serverdetails.Applications', 'serverdetails.Status', 'serverdetails.power_status')
       ->join('serverdetails', 'serverdetails.virtual_serv_token', '=', 'py_vir_server_tables.virtual_serv_token')
       ->where('Status', '1')
       ->where('vir_status', '1')
@@ -45,6 +45,7 @@ class ListExport2 implements FromCollection, WithHeadings
             'OS',
             'Applications',
             'Status',
+            'power_status'
            
           
         ];

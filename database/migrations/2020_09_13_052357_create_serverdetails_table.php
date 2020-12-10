@@ -34,6 +34,7 @@ class CreateServerdetailsTable extends Migration
             $table->string('vir_application');
             $table->string('Created_user_id');
             $table->string('Created_by');
+            $table->boolean('power_status')->default(1);
             $table->boolean('Status')->default(1);
             $table->timestamps();
         });

@@ -30,6 +30,9 @@ Route::get('/remove_server_details', 'serverdetailsController@remove_server_deta
 Route::get('/vir_data_insert', 'serverdetailsController@vir_data_insert')->name('vir_data_insert');
 Route::get('/vir_data_delete', 'serverdetailsController@vir_data_delete')->name('vir_data_delete');
 Route::get('/main_vir_data_delete', 'serverdetailsController@main_vir_data_delete')->name('main_vir_data_delete');
+Route::get('/swich_option', 'serverdetailsController@swich_option')->name('swich_option');
+
+
 
 // Export to excel
 Route::get('/report','serverdetailsController@report')->name('report');
