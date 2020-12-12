@@ -24,6 +24,8 @@
       var vir_os = $('#vir_os').val();
       var vir_name = $('#vir_name').val();
       var vir_application = $('#vir_application').val();
+      var phy_spec_processor_val = $('#phy_spec_processor_val').val();
+      var phy_spec_ram_val = $('#phy_spec_ram_val').val();
 
 
       // var apps = $('input[name^=apps]');
@@ -54,6 +56,8 @@
         apps = "";
         ip_address = "";
         os = "";
+        phy_spec_processor_val = "";
+        phy_spec_ram_val = "";
       }
       else
       {
@@ -71,7 +75,7 @@
         },
            type:'POST',
            url:'{{url("/add_server_details")}}',
-           data:{py_or_vir:py_or_vir, serv_option_in:serv_option_in, vir_pyname:vir_pyname, vir_pyipadd:vir_pyipadd, vir_pyos:vir_pyos, vir_pyapplication:vir_pyapplication,Serial_No:Serial_No, Asset_no:Asset_no, pur_year:pur_year, rack_no, rack_u_no:rack_u_no, pro_model:pro_model, ip_address:ip_address, os:os, apps:apps, virtual_machine_ip:virtual_machine_ip, vir_os:vir_os, vir_name:vir_name, vir_application:vir_application, serv_location:serv_location},
+           data:{py_or_vir:py_or_vir, serv_option_in:serv_option_in, vir_pyname:vir_pyname, vir_pyipadd:vir_pyipadd, vir_pyos:vir_pyos, vir_pyapplication:vir_pyapplication,Serial_No:Serial_No, Asset_no:Asset_no, pur_year:pur_year, rack_no, rack_u_no:rack_u_no, pro_model:pro_model, ip_address:ip_address, os:os, apps:apps, virtual_machine_ip:virtual_machine_ip, vir_os:vir_os, vir_name:vir_name, vir_application:vir_application, serv_location:serv_location, phy_spec_processor_val:phy_spec_processor_val, phy_spec_ram_val:phy_spec_ram_val},
            success:function(data){
 
              console.log(data.ip_errors);
@@ -332,6 +336,8 @@
             $('#update_py_or_vir').val(jsonData.viewdata.Physial_or_Virtual);
             $('#update_seri_no').val(jsonData.viewdata.Serial_No);
             $('#update_asset_no').val(jsonData.viewdata.Asset_No);
+            $('#update_phy_spec_processor_val').val(jsonData.viewdata.py_spec_processor);
+            $('#update_phy_spec_ram_val').val(jsonData.viewdata.py_spec_ram);
             $('#update_pur_year').val(jsonData.viewdata.Purchase_year);
             $('#update_rack_no').val(jsonData.viewdata.Rack_No);
             $('#update_rack_u_no').val(jsonData.viewdata.Rack_unit_No);
@@ -412,6 +418,8 @@
       var py_or_vir = $('#update_py_or_vir').val();
       var Serial_No = $('#update_seri_no').val();
       var Asset_no = $('#update_asset_no').val();
+      var update_phy_spec_processor = $('#update_phy_spec_processor_val').val();
+      var update_phy_spec_ram = $('#update_phy_spec_ram_val').val();
       var serv_location = $('#update_serv_location').val();
       var pur_year = $('#update_pur_year').val();
       var rack_no = $('#update_rack_no').val();
@@ -459,7 +467,7 @@
         },
            type:'GET',
            url:'{{url("/update_server_details")}}',
-           data:{id:id, py_or_vir:py_or_vir, Serial_No:Serial_No, Asset_no:Asset_no, pur_year:pur_year, rack_no, rack_u_no:rack_u_no, pro_model:pro_model, ip_address:ip_address, os:os, apps:apps, serv_location:serv_location},
+           data:{id:id, py_or_vir:py_or_vir, Serial_No:Serial_No, Asset_no:Asset_no, pur_year:pur_year, rack_no, rack_u_no:rack_u_no, pro_model:pro_model, ip_address:ip_address, os:os, apps:apps, serv_location:serv_location, update_phy_spec_processor:update_phy_spec_processor, update_phy_spec_ram:update_phy_spec_ram},
            success:function(data){
 
              if (data.ip_errors != "") 
@@ -538,6 +546,8 @@
             $('#view_py_or_vir').val(jsonData.viewdata.Physial_or_Virtual);
             $('#view_seri_no').val(jsonData.viewdata.Serial_No);
             $('#view_asset_no').val(jsonData.viewdata.Asset_No);
+            $('#view_phy_spec_processor_val').val(jsonData.viewdata.py_spec_processor);
+            $('#view_phy_spec_ram_val').val(jsonData.viewdata.py_spec_ram);
             $('#view_pur_year').val(jsonData.viewdata.Purchase_year);
             $('#view_rack_no').val(jsonData.viewdata.Rack_No);
             $('#view_rack_u_no').val(jsonData.viewdata.Rack_unit_No);
@@ -712,6 +722,8 @@
             $('#phy_ipadd').show(1000);
             $('#phy_pur_year').show(1000);
             $('#phy_os').show(1000);
+            $('#phy_spec_processor').show(1000);
+            $('#phy_spec_ram').show(1000);
             $('#server_option').hide(1000);
           
         }
@@ -729,6 +741,8 @@
             $('#phy_pur_year').hide(1000);
             $('#server_option').hide(1000);
             $('#vir_server_data').hide(1000);
+            $('#phy_spec_processor').hide(1000);
+            $('#phy_spec_ram').hide(1000);
         }
         else if (x == "Physical") 
         {
@@ -742,6 +756,8 @@
             $('#phy_ipadd').show(1000);
             $('#phy_os').show(1000);  
             $('#phy_pur_year').show(1000);  
+            $('#phy_spec_processor').show(1000);
+            $('#phy_spec_ram').show(1000);
         }
         else if (x == "NAS") 
         {
@@ -757,6 +773,8 @@
             $('#phy_pur_year').show(1000);
             $('#server_option').hide(1000);
             $('#vir_server_data').hide(1000);
+            $('#phy_spec_processor').hide(1000);
+            $('#phy_spec_ram').hide(1000);
         }
 
         else if (x == "Switch" || x == "Router" || x == "Tape Loader" || x == "KVM") 
@@ -773,6 +791,8 @@
             $('#phy_pur_year').show(1000);
             $('#server_option').hide(1000);
             $('#vir_server_data').hide(1000);
+            $('#phy_spec_processor').hide(1000);
+            $('#phy_spec_ram').hide(1000);
         }
         
 

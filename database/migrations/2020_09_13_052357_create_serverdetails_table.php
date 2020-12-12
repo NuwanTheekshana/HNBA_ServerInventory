@@ -32,6 +32,8 @@ class CreateServerdetailsTable extends Migration
             $table->string('vir_os');
             $table->string('Applications');
             $table->string('vir_application');
+            $table->string('py_spec_processor');
+            $table->string('py_spec_ram');
             $table->string('Created_user_id');
             $table->string('Created_by');
             $table->boolean('power_status')->default(1);

@@ -35,6 +35,10 @@ class serverdetailsController extends Controller
         $ip_address = $request->ip_address;
         $os = $request->os;
         $apps = $request->apps;
+        $phy_spec_processor = $request->phy_spec_processor_val;
+        $phy_spec_ram = $request->phy_spec_ram_val;
+
+
         $virtual_machine_ip = $request->virtual_machine_ip;
         $vir_os = $request->vir_os;
         $vir_name = $request->vir_name;
@@ -117,17 +121,23 @@ class serverdetailsController extends Controller
             $ip_address = "";
             $os = "";
             $apps = "";
+            $phy_spec_processor = "";
+            $phy_spec_ram = "";
         }
 
         if ($py_or_vir == "NAS") {
             $os = "";
             $apps = "";
+            $phy_spec_processor = "";
+            $phy_spec_ram = "";
         }
 
         if ($py_or_vir == "Switch" || $py_or_vir == "Router"|| $py_or_vir == "Tape Loader"|| $py_or_vir == "KVM") {
             $os = "";
             $apps = "";
             $ip_address = "";
+            $phy_spec_processor = "";
+            $phy_spec_ram = "";
         }
 
         if ($py_or_vir == "Physical") 
@@ -159,6 +169,8 @@ class serverdetailsController extends Controller
                 $add_data->vir_os = "";
                 $add_data->Applications = $apps;
                 $add_data->vir_application = "";
+                $add_data->py_spec_processor = $phy_spec_processor;
+                $add_data->py_spec_ram = $phy_spec_ram;
                 $add_data->Created_user_id = $created_user_id;
                 $add_data->Created_by = $created_by;
                 $add_data->Status = 1;
@@ -217,6 +229,8 @@ class serverdetailsController extends Controller
                 $add_data->vir_os = "";
                 $add_data->Applications = $apps;
                 $add_data->vir_application = "";
+                $add_data->py_spec_processor = $phy_spec_processor;
+                $add_data->py_spec_ram = $phy_spec_ram;
                 $add_data->Created_user_id = $created_user_id;
                 $add_data->Created_by = $created_by;
                 $add_data->Status = 1;
@@ -242,6 +256,8 @@ class serverdetailsController extends Controller
                 $add_data->OS = "";
                 $add_data->vir_os = $vir_os;
                 $add_data->Applications = "";
+                $add_data->py_spec_processor = $phy_spec_processor;
+                $add_data->py_spec_ram = $phy_spec_ram;
                 $add_data->vir_application = $vir_application;
                 $add_data->Created_user_id = $created_user_id;
                 $add_data->Created_by = $created_by;
@@ -268,6 +284,8 @@ class serverdetailsController extends Controller
                 $add_data->vir_os = "";
                 $add_data->Applications = $apps;
                 $add_data->vir_application = "";
+                $add_data->py_spec_processor = $phy_spec_processor;
+                $add_data->py_spec_ram = $phy_spec_ram;
                 $add_data->Created_user_id = $created_user_id;
                 $add_data->Created_by = $created_by;
                 $add_data->Status = 1;
@@ -425,6 +443,8 @@ class serverdetailsController extends Controller
     $py_or_vir = $request->py_or_vir;
     $seri_no = $request->Serial_No;
     $asset_no = $request->Asset_no;
+    $update_phy_spec_processor = $request->update_phy_spec_processor;
+    $update_phy_spec_ram = $request->update_phy_spec_ram;
     $serv_location = $request->serv_location;
     $pur_year = $request->pur_year;
     $rack_no = $request->rack_no;
@@ -502,12 +522,16 @@ class serverdetailsController extends Controller
     if ($py_or_vir == "NAS") {
         $os = "";
         $apps = "";
+        $update_phy_spec_processor = "";
+        $update_phy_spec_ram = "";
     }
 
     if ($py_or_vir == "Switch" || $py_or_vir == "Router"|| $py_or_vir == "Tape Loader"|| $py_or_vir == "KVM") {
         $os = "";
         $apps = "";
         $ip_address = "";
+        $update_phy_spec_processor = "";
+        $update_phy_spec_ram = "";
     }
 
     
@@ -523,6 +547,8 @@ class serverdetailsController extends Controller
     $update_data->ip_address = $ip_address;
     $update_data->OS = $os;
     $update_data->Applications = $apps;
+    $update_data->py_spec_processor = $update_phy_spec_processor;
+    $update_data->py_spec_ram = $update_phy_spec_ram;
     $update_data->update();
 
     $add_data = new followup();

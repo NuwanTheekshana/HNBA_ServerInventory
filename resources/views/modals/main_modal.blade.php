@@ -158,6 +158,20 @@
             </div>
         </div>
 
+        <div class="form-group row" id="phy_spec_processor">
+            <label for="phy_spec_processor_val" class="col-sm-4 col-form-label">Server Processor Modal</label>
+          <div class="col-sm-8">
+          <input type="text" class="form-control" id="phy_spec_processor_val" name="phy_spec_processor_val" placeholder="">
+          </div>
+        </div>
+
+        <div class="form-group row" id="phy_spec_ram">
+            <label for="phy_spec_ram_val" class="col-sm-4 col-form-label">Server RAM Modal</label>
+          <div class="col-sm-8">
+          <input type="text" class="form-control" id="phy_spec_ram_val" name="phy_spec_ram_val" placeholder="">
+          </div>
+      </div>
+
           <div class="form-group row">
             <label for="serv_location" class="col-sm-4 col-form-label">Location</label>
           <div class="col-sm-8">
@@ -345,6 +359,20 @@
            <input type="text" class="form-control" id="update_asset_no" name="asset_no" placeholder="">
           </div>
       </div>
+
+      <div class="form-group row" id="update_phy_spec_processor">
+        <label for="update_phy_spec_processor_val" class="col-sm-4 col-form-label">Server Processor Modal</label>
+      <div class="col-sm-8">
+      <input type="text" class="form-control" id="update_phy_spec_processor_val" name="update_phy_spec_processor_val" placeholder="">
+      </div>
+    </div>
+
+    <div class="form-group row" id="update_phy_spec_ram">
+        <label for="update_phy_spec_ram_val" class="col-sm-4 col-form-label">Server RAM Modal</label>
+      <div class="col-sm-8">
+      <input type="text" class="form-control" id="update_phy_spec_ram_val" name="update_phy_spec_ram_val" placeholder="">
+      </div>
+  </div>
 
       <div class="form-group row">
         <label for="update_serv_location" class="col-sm-4 col-form-label">Location</label>
@@ -589,6 +617,20 @@
                     </div>
                 </div>
 
+                <div class="form-group row" id="view_phy_spec_processor">
+                  <label for="view_phy_spec_processor_val" class="col-sm-4 col-form-label">Server Processor Modal</label>
+                <div class="col-sm-8">
+                <input type="text" class="form-control" disabled id="view_phy_spec_processor_val" name="view_phy_spec_processor_val" placeholder="">
+                </div>
+              </div>
+          
+              <div class="form-group row" id="view_phy_spec_ram">
+                  <label for="view_phy_spec_ram_val" class="col-sm-4 col-form-label">Server RAM Modal</label>
+                <div class="col-sm-8">
+                <input type="text" class="form-control" disabled id="view_phy_spec_ram_val" name="view_phy_spec_ram_val" placeholder="">
+                </div>
+            </div>
+
                 <div class="form-group row">
                   <label for="view_serv_location" class="col-sm-4 col-form-label">Location</label>
                 <div class="col-sm-8">
@@ -739,7 +781,7 @@
         <div class="form-group row">
           <label for="view_serv_location_other" class="col-sm-4 col-form-label">Location</label>
         <div class="col-sm-8">
-          <select class="form-control" name="view_serv_location_other" id="view_serv_location_other">
+          <select class="form-control" name="view_serv_location_other" id="view_serv_location_other" disabled>
             <option value="">Select Location</option>
             <option value="DR Site">DR Site</option>
             <option value="HO Server Room">HO Server Room</option>
